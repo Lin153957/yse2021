@@ -39,6 +39,15 @@ try{
 //⑥データベースで使用する文字コードを「UTF8」にする
 
 //⑦書籍テーブルから書籍情報を取得するSQLを実行する。また実行結果を変数に保存する
+$books getBooks($pdo);
+
+function getBooks($pdo,$limit = 20,$offset = 0)
+{
+	$sql = "SELECT * FROM books";
+	$stmt = $pdo->prepare($sql);
+	$stmt->execute();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
