@@ -20,6 +20,14 @@
 
 //⑤データベースへ接続し、接続情報を変数に保存する
 
+$db_name = 'zaiko2021_yse';
+$db_host = 'localhost';
+$db_port = '3306';
+$db_user = 'zaiko2021_yse';
+$db_password = '2021zaiko';
+
+$dsn = "mysql'dbname={$db_name};"
+
 //⑥データベースで使用する文字コードを「UTF8」にする
 
 //⑦書籍テーブルから書籍情報を取得するSQLを実行する。また実行結果を変数に保存する
@@ -79,7 +87,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<?php
+						<?php foreach($books as $book) : ?>
+							<tr id="book">
 						//⑩SQLの実行結果の変数から1レコードのデータを取り出す。レコードがない場合はループを終了する。
 						// while(/* ⑩の処理を書く */){
 						// 	//⑪extract変数を使用し、1レコードのデータを渡す。
