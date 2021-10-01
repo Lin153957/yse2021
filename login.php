@@ -62,10 +62,10 @@ if (isset($_POST['decision']) && $_POST['decision'] == 1) {
 		<h1>ログイン</h1>
 		<?php
 		//⑮エラーメッセージの変数に入っている値を表示する
-		echo "<div id='error'>", /* ⑮の変数を書く */, "</div>";
+//		echo "<div id='error'>", /* ⑮の変数を書く */, "</div>";
 		
 		//⑯メッセージの変数に入っている値を表示する
-		echo "<div id='msg'>", /* ⑯の変数を書く */, "</div>";
+//		echo "<div id='msg'>", /* ⑯の変数を書く */, "</div>";
 		?>
 		<form action="login.php" method="post" id="log">
 			<p>
