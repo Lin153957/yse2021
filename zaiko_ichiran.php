@@ -25,29 +25,32 @@ $db_host = 'localhost';
 $db_port = '3306';
 $db_user = 'zaiko2021_yse';
 $db_password = '2021zaiko';
-
-$dsn = "mysql'dbname={$db_name};host={$db_host};charset_utf8;port={$db_port}";
+$dsn = "mysql:dbname={$db_name};host={$db_host};charset_utf8;port={$db_port}";
 try{
 	$pdo = new PDO($dsn,$db_user,$db_password);
 	$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTIOMN);
-	$pdo->setAttribute(PDO::ATTR_ERRMODE_PREPARES,false);
+	$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
 }catch (PDOException $e){
 	echo "接続失敗:".$e->getMessage();
 	exit;
 }
 
-//⑥データベースで使用する文字コードを「UTF8」にする
-
 //⑦書籍テーブルから書籍情報を取得するSQLを実行する。また実行結果を変数に保存する
-$books getBooks($pdo);
+$books = getBooks($pdo);
 
-function getBooks($pdo,$limit = 20,$offset = 0)
+function getBooks($pdo,$limit =20,$offset=0)
 {
+	//$sql = "SELECT * FROM books LIMIT{$limit}";
 	$sql = "SELECT * FROM books";
 	$stmt = $pdo->prepare($sql);
 	$stmt->execute();
+	// return $stmt;
+	$books =[];
+	while($book = $stmt->fetch(PDO::FETCH_ASSOC)){
+		$books[]=$book;
+	}
+	return $books;
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -104,25 +107,28 @@ function getBooks($pdo,$limit = 20,$offset = 0)
 						</tr>
 					</thead>
 					<tbody>
+						<?php foreach ($books as $book) : ?>
+							<tr id="book">
+								<td id="check"><input type="checkbox" name="books[]"value="<?= $book['id']?>"></td>
+								<td id='id'><?book['id']?></td>";
+						?>
 						<?php 
-						while($book = $stmt->fetch(PDO::FETCH_ASSOC)){
-						//⑩SQLの実行結果の変数から1レコードのデータを取り出す。レコードがない場合はループを終了する。
-						// while(/* ⑩の処理を書く */){
-						// 	//⑪extract変数を使用し、1レコードのデータを渡す。
-
-						 	echo "<tr id='book'>";
-							echo "<td id='check'><input type='checkbox' name='books[]'value=".$book['id']."></td>";
-						 	echo "<td id='id'>{$book['id']}</td>";
-						 	echo "<td id='title'>{$book['title']}</td>";
-						 	echo "<td id='author'>{$book['author']}</td>";
-						 	echo "<td id='date'>{$book['date']}</td>";
-							echo "<td id='price'>{$book['price']}</td>";
-						 	echo "<td id='stock'>{$book['stock']}</td>";
-
-						 	echo "</tr>";
-						
-
-						}
+//						while($book = $stmt->fetch(PDO::FETCH_ASSOC)){
+//						//⑩SQLの実行結果の変数から1レコードのデータを取り出す。レコードがない場合はループを終了する。
+//						// while(/* ⑩の処理を書く */){
+//						// 	//⑪extract変数を使用し、1レコードのデータを渡す。
+//
+//						 	echo "<tr id='book'>";
+//							echo "<td id='check'><input type='checkbox' name='books[]'value=".$book['id']."></td>";
+//						 	echo "<td id='id'>{$book['id']}</td>";
+//					 	echo "<td id='title'>{$book['title']}</td>";
+//						 	echo "<td id='author'>{$book['author']}</td>";
+//						 	echo "<td id='date'>{$book['date']}</td>";
+//							echo "<td id='price'>{$book['price']}</td>";
+//						 	echo "<td id='stock'>{$book['stock']}</td>";
+//
+//						 	echo "</tr>";
+//						}
 
 						?>
 					</tbody>
