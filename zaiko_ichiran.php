@@ -28,7 +28,7 @@ $db_password = '2021zaiko';
 $dsn = "mysql:dbname={$db_name};host={$db_host};charset_utf8;port={$db_port}";
 try{
 	$pdo = new PDO($dsn,$db_user,$db_password);
-	$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTIOMN);
+	$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 	$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
 }catch (PDOException $e){
 	echo "接続失敗:".$e->getMessage();
@@ -115,22 +115,22 @@ function getBooks($pdo,$limit =20,$offset=0)
 
 						<?php endforeach ?>
 						<?php 
-//						while($book = $stmt->fetch(PDO::FETCH_ASSOC)){
-//						//⑩SQLの実行結果の変数から1レコードのデータを取り出す。レコードがない場合はループを終了する。
-//						// while(/* ⑩の処理を書く */){
-//						// 	//⑪extract変数を使用し、1レコードのデータを渡す。
-//
-//						 	echo "<tr id='book'>";
-//							echo "<td id='check'><input type='checkbox' name='books[]'value=".$book['id']."></td>";
-//						 	echo "<td id='id'>{$book['id']}</td>";
-//					 	echo "<td id='title'>{$book['title']}</td>";
-//						 	echo "<td id='author'>{$book['author']}</td>";
-//						 	echo "<td id='date'>{$book['date']}</td>";
-//							echo "<td id='price'>{$book['price']}</td>";
-//						 	echo "<td id='stock'>{$book['stock']}</td>";
-//
-//						 	echo "</tr>";
-//						}
+						while($book = $stmt->fetch(PDO::FETCH_ASSOC)){
+						//⑩SQLの実行結果の変数から1レコードのデータを取り出す。レコードがない場合はループを終了する。
+						// while(/* ⑩の処理を書く */){
+						// 	//⑪extract変数を使用し、1レコードのデータを渡す。
+
+						 	echo "<tr id='book'>";
+							echo "<td id='check'><input type='checkbox' name='books[]'value=".$book['id']."></td>";
+						 	echo "<td id='id'>{$book['id']}</td>";
+					 	echo "<td id='title'>{$book['title']}</td>";
+						 	echo "<td id='author'>{$book['author']}</td>";
+						 	echo "<td id='date'>{$book['date']}</td>";
+							echo "<td id='price'>{$book['price']}</td>";
+						 	echo "<td id='stock'>{$book['stock']}</td>";
+
+						 	echo "</tr>";
+						}
 
 						?>
 					</tbody>
