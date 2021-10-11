@@ -1,10 +1,10 @@
 <?php
 /* 
 【機能】
-	　ユーザ名とパスワードを元に認証を行う。認証についてはソースコードに
-	直接記述されているユーザ名とパスワードが一致しているかを確認する。
+	　ユーザ名とパスワードを元に認証を行う。認証についてはるかを確認する。
 	一致していた場合はログインして書籍一覧を表示し、ログインできない
-	場合はエラーとする。
+	場合はエラーとする。ソースコードに
+	直接記述されているユーザ名とパスワードが一致してい
 
 【エラー一覧（エラー表示：発生条件）】
 	名前かパスワードが未入力です：IDまたはパスワードが未入力
@@ -12,29 +12,59 @@
 	ログインしてください：ログインしていない状態で他のページに遷移した場合(ログイン画面に遷移し上記を表示)
 */
 //⑥セッションを開始する
-
+session_start();
 //①名前とパスワードを入れる変数を初期化する
-$ser_name ='';
-$password ='';
+$user_name ='test';
+$password ='123456';
 /*
  * ②ログインボタンが押されたかを判定する。
  * 押されていた場合はif文の中の処理を行う
  */
-if (isset($_POST['decision']) && $_POST['decision'] == 1) {
+if (isset($_POST['login'])) {
+	
+
+	if (isset($_POST['decision']) && $_POST['decision'] == 1) {
 	// 	/*
 	// 	 * ③名前とパスワードが両方とも入力されているかを判定する。
 	// 	 * 入力されていた場合はif文の中の処理を行う。
 	// 	 */
-	// 	if (/* ③の処理を書く */) {
+		$decision = $_POST['decision'];
+		try {
+			$pdo->beginTransaction();
+			$sql = "SELECT * FROM user WHERE decision = :decision"; 
+			$stm = $pdo->prepare($sql);
+			$stm->bindValue(':decision', $decision, PDO::PARAM_STR);
+			$stm->execute();
+
+			$password = $_POST['password'];
+			$result = $stm->fetch(PDO::FETCH_ASSOC);
+				if (password_verify($password, $result['password'])) {/* ③の処理を書く */
 	// 		//④名前とパスワードにPOSTで送られてきた名前とパスワードを設定する
-	// 	} else {
+					$_SESSION['decision'] = $decision;
+					$_SESSION['password'] = $password;
+					$_SESSION['message'] = "ログインしました。";
+					
+			 	} 
+				 else {
 	// 		//⑤名前かパスワードが入力されていない場合は、「名前かパスワードが未入力です」という文言をメッセージを入れる変数に設定する
-	// 	}
+					$errors['login'] = '名前かパスワードが未入力です。';
+						}
+					} catch (PDOException $e) {
+						echo $e->getMessage();
+       }
+   }
+
 }
 
 // //⑦名前が入力されているか判定する。入力されていた場合はif文の中に入る
-// if (/* ⑦の処理を書く */) {
+if (empty($_POST['name'])) {/* ⑦の処理を書く */
+	$errors['name'] = '名前が未入力です。';
+} 
+if (empty($_POST['password'])) {
+	$errors['password'] = 'パスワードが未入力です。';
+}
 // 	//⑧名前に「yse」、パスワードに「2021」と設定されているか確認する。設定されていた場合はif文の中に入る
+
 // 	if (/* ⑧の処理を書く */){
 // 		//⑨SESSIONに名前を設定し、SESSIONの「login」フラグをtrueにする
 // 		//⑩在庫一覧画面へ遷移する
