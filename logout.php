@@ -8,4 +8,8 @@
 //②セッションを削除する。
 
 //③ログイン画面へ遷移する。
+session_start();
+$_SESSION = array();
+header("Location: login.php");
+
 ?>
