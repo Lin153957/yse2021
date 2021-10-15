@@ -4,13 +4,14 @@
 書籍テーブルより書籍情報を取得し、画面に表示する。
 商品をチェックし、ボタンを押すことで入荷、出荷が行える。
 ログアウトボタン押下時に、セッション情報を削除しログイン画面に遷移する。
+
 【エラー一覧（エラー表示：発生条件）】
 入荷する商品が選択されていません：商品が一つも選択されていない状態で入荷ボタンを押す
 出荷する商品が選択されていません：商品が一つも選択されていない状態で出荷ボタンを押す
 */
 
 //①セッションを開始する
-session_start();
+
 //②SESSIONの「login」フラグがfalseか判定する。「login」フラグがfalseの場合はif文の中に入る。
 // if (/* ②の処理を書く */){
 // 	//③SESSIONの「error2」に「ログインしてください」と設定する。
@@ -24,7 +25,7 @@ $db_host = 'localhost';
 $db_port = '3306';
 $db_user = 'zaiko2021_yse';
 $db_password = '2021zaiko';
-$dsn = "mysql:dbname={$db_name};host={$db_host};charset=utf8;port={$db_port}";
+$dsn = "mysql:dbname={$db_name};host={$db_host};charset_utf8;port={$db_port}";
 try{
 	$pdo = new PDO($dsn,$db_user,$db_password);
 //	$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
@@ -35,9 +36,21 @@ try{
 }
 
 //⑦書籍テーブルから書籍情報を取得するSQLを実行する。また実行結果を変数に保存する
-$sql = "SELECT * FROM books";
-$stmt = $p0do->query($sql);
+$books = getBooks($pdo);
 
+function getBooks($pdo,$limit =20,$offset=0)
+{
+	//$sql = "SELECT * FROM books LIMIT{$limit}";
+	$sql = "SELECT * FROM books";
+	$stmt = $pdo->prepare($sql);
+	$stmt->execute();
+	// return $stmt;
+	$books =[];
+	while($book = $stmt->fetch(PDO::FETCH_ASSOC)){
+		$books[]=$book;
+	}
+	return $books;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -106,9 +119,9 @@ $stmt = $p0do->query($sql);
 						 	echo "<td id='id'>{$book['id']}</td>";
 						 	echo "<td id='title'>{$book['title']}</td>";
 						 	echo "<td id='author'>{$book['author']}</td>";
-						 	echo "<td id='date'>{$book['salesDate']}</td>";
+						 	echo "<td id='date'>{$book['date']}</td>";
 							echo "<td id='price'>{$book['price']}</td>";
-							echo "<td id='stock'>{$book['stock']}</td>";
+						 	echo "<td id='stock'>{$book['stock']}</td>";
 
 						 	echo "</tr>";
 						}
