@@ -14,7 +14,7 @@
 //⑥セッションを開始する
 session_start();
 //①名前とパスワードを入れる変数を初期化する
-$user_name ='';
+$name ='';
 $password ='';
 /*
  * ②ログインボタンが押されたかを判定する。
@@ -32,32 +32,16 @@ if (isset($_POST['decision']) && $_POST['decision'] == 1) {
 		$name = $_POST['name'];
 		$password = $_POST['pass'];
 	}	
-		try {
-			$pdo->beginTransaction();
-			$sql = "SELECT * FROM user WHERE decision = :decision"; 
-			$stm = $pdo->prepare($sql);
-			$stm->bindValue(':decision', $decision, PDO::PARAM_STR);
-			$stm->execute();
-
-			$password = $_POST['password'];
-			$result = $stm->fetch(PDO::FETCH_ASSOC);
-				if (password_verify($password, $result['password'])) {/* ③の処理を書く */
 	
-					$_SESSION['decision'] = $decision;
-					$_SESSION['password'] = $password;
-					$_SESSION['message'] = "ログインしました。";
-					
-			 	} 
 				 else {
 	// 		//⑤名前かパスワードが入力されていない場合は、「名前かパスワードが未入力です」という文言をメッセージを入れる変数に設定する
 					$errors['login'] = '名前かパスワードが未入力です。';
 						}
-					} catch (PDOException $e) {
-						echo $e->getMessage();
+					} 
        
-   }
+   
 
-}
+
 
 // //⑦名前が入力されているか判定する。入力されていた場合はif文の中に入る
 if ($name && $password) {/* ⑦の処理を書く */
@@ -75,14 +59,14 @@ if ($name && $password) {/* ⑦の処理を書く */
  	}else{
 // 		//⑪名前もしくはパスワードが間違っていた場合は、「ユーザー名かパスワードが間違っています」という文言をメッセージを入れる変数に設定する
 		$errors_messae='ユーザー名かパスワードが間違っています';
-// 	}
-// }
+	}
+ 
 
 // //⑫SESSIONの「error2」に値が入っているか判定する。入っていた場合はif文の中に入る
 // if (/* ⑫の処理を書く */) {
 // 	//⑬SESSIONの「error2」の値をエラーメッセージを入れる変数に設定する。
 // 	//⑭SESSIONの「error2」にnullを入れる。
-// }
+//}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -96,10 +80,12 @@ if ($name && $password) {/* ⑦の処理を書く */
 		<h1>ログイン</h1>
 		<?php
 		//⑮エラーメッセージの変数に入っている値を表示する
-//		echo "<div id='error'>", /* ⑮の変数を書く */, "</div>";
+		
+		echo "<div id='error'>", /* ⑮の変数を書く */ "</div>";
 		
 		//⑯メッセージの変数に入っている値を表示する
 //		echo "<div id='msg'>", /* ⑯の変数を書く */, "</div>";
+
 		?>
 		<form action="login.php" method="post" id="log">
 			<p>
