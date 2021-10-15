@@ -14,21 +14,24 @@
 //⑥セッションを開始する
 session_start();
 //①名前とパスワードを入れる変数を初期化する
-$user_name ='test';
-$password ='123456';
+$user_name ='';
+$password ='';
 /*
  * ②ログインボタンが押されたかを判定する。
  * 押されていた場合はif文の中の処理を行う
  */
-if (isset($_POST['login'])) {
 	
-
-	if (isset($_POST['decision']) && $_POST['decision'] == 1) {
+if (isset($_POST['decision']) && $_POST['decision'] == 1) {
 	// 	/*
 	// 	 * ③名前とパスワードが両方とも入力されているかを判定する。
 	// 	 * 入力されていた場合はif文の中の処理を行う。
 	// 	 */
-		$decision = $_POST['decision'];
+	if(!empty($_POST['name'] && !empty($_POST['pass']))){
+// 		//④名前とパスワードにPOSTで送られてきた名前とパスワードを設定する
+
+		$name = $_POST['name'];
+		$password = $_POST['pass'];
+	}	
 		try {
 			$pdo->beginTransaction();
 			$sql = "SELECT * FROM user WHERE decision = :decision"; 
@@ -39,7 +42,7 @@ if (isset($_POST['login'])) {
 			$password = $_POST['password'];
 			$result = $stm->fetch(PDO::FETCH_ASSOC);
 				if (password_verify($password, $result['password'])) {/* ③の処理を書く */
-	// 		//④名前とパスワードにPOSTで送られてきた名前とパスワードを設定する
+	
 					$_SESSION['decision'] = $decision;
 					$_SESSION['password'] = $password;
 					$_SESSION['message'] = "ログインしました。";
@@ -51,26 +54,27 @@ if (isset($_POST['login'])) {
 						}
 					} catch (PDOException $e) {
 						echo $e->getMessage();
-       }
+       
    }
 
 }
 
 // //⑦名前が入力されているか判定する。入力されていた場合はif文の中に入る
-if (empty($_POST['name'])) {/* ⑦の処理を書く */
+if ($name && $password) {/* ⑦の処理を書く */
 	$errors['name'] = '名前が未入力です。';
 } 
-if (empty($_POST['password'])) {
-	$errors['password'] = 'パスワードが未入力です。';
-}
 // 	//⑧名前に「yse」、パスワードに「2021」と設定されているか確認する。設定されていた場合はif文の中に入る
+	
+ 	if ($name =='yse' && $password == '2021' ){/* ⑧の処理を書く */
 
-// 	if (/* ⑧の処理を書く */){
 // 		//⑨SESSIONに名前を設定し、SESSIONの「login」フラグをtrueにする
+		$_SESSION['login'] = true;
+		$_SESSION['name'] = $name;
 // 		//⑩在庫一覧画面へ遷移する
-// 		header(/* ⑩の遷移先を書く */);
-// 	}else{
+ 		header("Location: zaiko_ichiran.php"); /* ⑩の遷移先を書く */
+ 	}else{
 // 		//⑪名前もしくはパスワードが間違っていた場合は、「ユーザー名かパスワードが間違っています」という文言をメッセージを入れる変数に設定する
+		$errors_messae='ユーザー名かパスワードが間違っています';
 // 	}
 // }
 
