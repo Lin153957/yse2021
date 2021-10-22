@@ -4,10 +4,13 @@
 	セッション情報を削除しログイン画面に遷移する。
 */
 //①セッションを開始する。
+session_start();
 
 //②セッションを削除する。
+$_SESSION = array();
+session_destroy();
 
 //③ログイン画面へ遷移する。
-session_start();
-$_SESSION = array();
-header("Location: login.php");
+header('Location: login.php');
+
+?>
